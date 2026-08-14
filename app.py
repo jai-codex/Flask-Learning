@@ -1,13 +1,14 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-
 @app.route("/")
 def home():
-    name = "Jai"
+    return render_template("index.html")
 
-    return render_template("index.html", username=name)
-
+@app.route("/welcome", methods=["POST"])
+def welcome():
+    name = request.form["username"]
+    return f"Welcome {name}"
 
 app.run(debug=True)

@@ -2,13 +2,16 @@
 <html>
 
 <head>
-    <title>My First Website</title>
+    <title>Flask Form</title>
 </head>
 
 <body>
-    <h1>Welcome {{username}}!</h1>
+    <h2>Enter Your Name</h2>
 
-    <p>I am learning Flask web Development.</p>
+    <form action="/welcome" method="POST">
+        <input type="text" name="username"><br>
+        <button type="submit">Submit</button>
+    </form>
 </body>
 
 </html>
