@@ -2,16 +2,17 @@
 <html>
 
 <head>
-    <title>Flask Form</title>
+    <title>Jinja If Else</title>
 </head>
 
 <body>
-    <h2>Enter Your Name</h2>
-
-    <form action="/welcome" method="POST">
-        <input type="text" name="username"><br>
-        <button type="submit">Submit</button>
-    </form>
+    {% if is_student %}
+    <h2>
+        Welcome Student!
+    </h2>
+    {% else %}
+    <h2>Your are not a student.</h2>
+    {% endif %}
 </body>
 
 </html>
