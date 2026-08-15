@@ -20,6 +20,15 @@
             <td>{{ book[2] }}</td>
         </tr>
         {% endfor %}
+
+    <h2>Add Book</h2>
+    <form action="/add" method="POST">
+        <input type="text" name="name" placeholder="Book name">
+        <br>
+        <input type="text" name="author" placeholder="Author">
+        <br>
+        <button type="submit">Add Book</button>
+    </form>    
     </table>
   </body>
 </html>
