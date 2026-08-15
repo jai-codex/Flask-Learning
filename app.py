@@ -5,9 +5,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    is_student = False
+    students = ["Jai", "Rahul", "Amit", "Priya"]
 
-    return render_template("index.html", is_student=is_student)
+    return render_template("index.html", students=students)
 
 
 app.run(debug=True)

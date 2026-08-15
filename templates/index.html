@@ -1,18 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+  <head>
+    <title>Jinja For Loop</title>
+  </head>
 
-<head>
-    <title>Jinja If Else</title>
-</head>
-
-<body>
-    {% if is_student %}
-    <h2>
-        Welcome Student!
-    </h2>
-    {% else %}
-    <h2>Your are not a student.</h2>
-    {% endif %}
-</body>
-
+  <body>
+    <h1>Students List</h1>
+    <ul>
+      {% for student in students %}
+      <li>{{student}}</li>
+      {% endfor %}
+    </ul>
+  </body>
 </html>
