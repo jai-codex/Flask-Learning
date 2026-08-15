@@ -35,5 +35,24 @@ def add():
     conn.close()
 
     return redirect("/")
-    
+
+@app.route("/update", methods=["POST"])
+def update_book():
+
+    book_id = request.form["id"]
+    name = request.form["name"]
+    author = request.form["author"]
+
+    conn = sqlite3.connect("books.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE books SET name=?, author=? WHERE id=?",
+        (name, author, book_id))
+   
+    conn.commit()
+    conn.close()
+
+    return redirect("/")
+
 app.run(debug=True)
