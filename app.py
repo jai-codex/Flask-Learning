@@ -1,13 +1,23 @@
 from flask import Flask, render_template
+import sqlite3
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def home():
-    students = ["Jai", "Rahul", "Amit", "Priya"]
+    
+    conn = sqlite3.connect("books.db")
+    cursor = conn.cursor()
 
-    return render_template("index.html", students=students)
+    cursor.execute(
+        "SELECT * FROM books")
+
+    books = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("index.html", books=books)
 
 
 app.run(debug=True)

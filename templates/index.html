@@ -1,15 +1,25 @@
 <!doctype html>
 <html>
   <head>
-    <title>Jinja For Loop</title>
+    <title>Jinja2 Operation</title>
   </head>
 
   <body>
-    <h1>Students List</h1>
-    <ul>
-      {% for student in students %}
-      <li>{{student}}</li>
-      {% endfor %}
-    </ul>
+    <h2>Books</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Author</th>
+        </tr>
+
+        {% for book in books %}
+        <tr>
+            <td>{{ book[0] }}</td>
+            <td>{{ book[1] }}</td>
+            <td>{{ book[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
   </body>
 </html>
