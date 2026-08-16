@@ -1,3 +1,4 @@
+from werkzeug.security import generate_password_hash
 from flask import Flask, request, render_template
 import sqlite3
 
@@ -12,7 +13,7 @@ def register():
 def register_user():
 
     username = request.form["username"]
-    password = request.form["password"]
+    password = generate_password_hash(request.form["password"])
 
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
