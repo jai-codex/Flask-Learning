@@ -1,20 +1,20 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-books = []
+students = [{
+    "id" : 1,
+    "name" : "Jai",
+    "ahe" : 19
+}]
 
-@app.route("/books", methods=["POST"])
-def add_book():
+@app.route("/")
+def home():
+    return "Students API is Running!"
 
-    data = request.get_json()
-
-    books.append(data)
-
-    return jsonify({
-        "message": "Book Added",
-        "books": books
-    }), 201
+@app.route("/students")
+def get_students():
+    return jsonify(students)
 
 if __name__ == "__main__":
     app.run(debug=True)
