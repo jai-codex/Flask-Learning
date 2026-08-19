@@ -40,5 +40,15 @@ def update_name(id):
             "student": student}),200
     return jsonify({"message": "Student Not Found"}),404        
 
+@app.route("/students/<int:id>", methods=["DELETE"])
+def delete_student(id):
+
+    for student in students:
+        if student["id"] == id:
+            students.remove(student)
+            return jsonify({"message": "Student Deleted Successfully!"}),200
+    return jsonify({
+        "message": "Student Not Found"}),404
+        
 if __name__ == "__main__":
     app.run(debug=True)
