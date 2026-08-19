@@ -35,4 +35,23 @@ def add_student():
     return jsonify({
         "message": "Student Added Sucessfully!"}), 201    
 
+@app.route("/students/<int:id>", methods=["PUT"])
+def update_student(id):
+
+    data = request.get_json()
+
+    conn = sqlite3.connect("students.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE students SET name=?, age=? WHERE id=?",
+        (data["name"],data["age"], id))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "message": "Student Updated Successfully!"
+    }), 200 
+
 app.run(debug=True)
