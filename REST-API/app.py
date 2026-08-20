@@ -12,10 +12,19 @@ def get_students():
 
     cursor.execute("SELECT * FROM students")
 
-    students = cursor.fetchall()
+    rows = cursor.fetchall()
     conn.close()
 
-    return jsonify(students)
+    students = []
+
+    for row in rows:
+        students.append({
+            "ID" : row[0],
+            "Name" : row[1],
+            "Age" : row[2]
+        })
+
+    return jsonify(students)    
 
 
 @app.route("/students", methods=["POST"])
