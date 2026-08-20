@@ -18,19 +18,21 @@ def get_students():
     students = []
 
     for row in rows:
-        students.append({
-            "ID" : row[0],
-            "Name" : row[1],
-            "Age" : row[2]
-        })
+        students.append({"ID": row[0], "Name": row[1], "Age": row[2]})
 
-    return jsonify(students)    
+    return jsonify(students)
 
 
 @app.route("/students", methods=["POST"])
 def add_student():
 
     data = request.get_json()
+
+    if "name" not in data:
+        return jsonify({"message": "Name is required!"}), 400
+
+    if "age" not in data:
+        return jsonify({"message": "Age is required!"}), 400
 
     conn = sqlite3.connect("students.db")
     cursor = conn.cursor()
