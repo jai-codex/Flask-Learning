@@ -26,25 +26,31 @@ def get_students():
 @app.route("/students", methods=["POST"])
 def add_student():
 
-    data = request.get_json()
+    try:
 
-    if "name" not in data:
-        return jsonify({"message": "Name is required!"}), 400
+        data = request.get_json()
 
-    if "age" not in data:
-        return jsonify({"message": "Age is required!"}), 400
+        if "name" not in data:
+            return jsonify({"message": "Name is required"}), 400
 
-    conn = sqlite3.connect("students.db")
-    cursor = conn.cursor()
+        if "age" not in data:
+            return jsonify({"message": "Age is required"}), 400
 
-    cursor.execute(
-        "INSERT INTO students(name, age) VALUES(?, ?)", (data["name"], data["age"])
-    )
+        conn = sqlite3.connect("students.db")
+        cursor = conn.cursor()
 
-    conn.commit()
-    conn.close()
+        cursor.execute(
+            "INSERT INTO students(name, age) VALUES (?, ?)", (data["name"], data["age"])
+        )
 
-    return jsonify({"message": "Student Added Sucessfully!"}), 201
+        conn.commit()
+        conn.close()
+
+        return jsonify({"message": "Student Added Successfully"}), 201
+
+    except Exception as e:
+
+        return jsonify({"message": "Something went wrong", "error": str(e)}), 500
 
 
 @app.route("/students/<int:id>", methods=["PUT"])
