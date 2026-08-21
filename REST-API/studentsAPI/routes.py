@@ -5,6 +5,42 @@ from flask_jwt_extended import create_access_token, jwt_required
 
 def register_routes(app):
 
+    @app.route("/register", methods=["POST"])
+    def register():
+
+        data = request.get_json()
+
+        username = data.get("username")
+        password = data.get("password")
+
+        if not username or not password:
+            return jsonify({
+                "message": "Username and Password are required"
+            }), 400
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute(
+                "INSERT INTO users(username, password) VALUES(?, ?)",
+                (username, password)
+            )
+
+            conn.commit()
+
+            return jsonify({
+                "message": "User Registered Successfully"
+            }), 201
+
+        except Exception:
+            return jsonify({
+                "message": "Username already exists"
+            }), 400
+
+        finally:
+            conn.close()
+
     @app.route("/login", methods=["POST"])
     def login():
 
