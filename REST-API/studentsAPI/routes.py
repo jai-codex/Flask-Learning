@@ -1,8 +1,26 @@
 from flask import jsonify, request
 from database import get_connection
+from flask_jwt_extended import create_access_token
 
 
 def register_routes(app):
+
+    @app.route("/login", methods=["POST"])
+    def login():
+
+        data = request.get_json()
+        username = data.get("username")
+        password = data.get("password")
+
+        if username == "admin" and password == "1234":
+
+            token = create_access_token(identity=username)
+
+            return (
+                jsonify({"message": "Student Login Successfully!", "token": token}),
+                200,
+            )
+        return jsonify({"message": "Invalid Username or Password"}), 401
 
     @app.route("/students", methods=["GET"])
     def get_students():
@@ -19,11 +37,7 @@ def register_routes(app):
         students = []
 
         for row in rows:
-            students.append({
-                "ID": row[0],
-                "Name": row[1],
-                "Age": row[2]
-            })
+            students.append({"ID": row[0], "Name": row[1], "Age": row[2]})
 
         return jsonify(students)
 
@@ -45,22 +59,17 @@ def register_routes(app):
 
             cursor.execute(
                 "INSERT INTO students(name, age) VALUES(?, ?)",
-                (data["name"], data["age"])
+                (data["name"], data["age"]),
             )
 
             conn.commit()
             conn.close()
 
-            return jsonify({
-                "message": "Student Added Successfully!"
-            }), 201
+            return jsonify({"message": "Student Added Successfully!"}), 201
 
         except Exception as e:
 
-            return jsonify({
-                "message": "Something went wrong",
-                "error": str(e)
-            }), 500
+            return jsonify({"message": "Something went wrong", "error": str(e)}), 500
 
     @app.route("/students/<int:id>", methods=["PUT"])
     def update_student(id):
@@ -72,15 +81,13 @@ def register_routes(app):
 
         cursor.execute(
             "UPDATE students SET name=?, age=? WHERE id=?",
-            (data["name"], data["age"], id)
+            (data["name"], data["age"], id),
         )
 
         conn.commit()
         conn.close()
 
-        return jsonify({
-            "message": "Student Updated Successfully!"
-        }), 200
+        return jsonify({"message": "Student Updated Successfully!"}), 200
 
     @app.route("/students/<int:id>", methods=["DELETE"])
     def delete_student(id):
@@ -88,14 +95,9 @@ def register_routes(app):
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute(
-            "DELETE FROM students WHERE id=?",
-            (id,)
-        )
+        cursor.execute("DELETE FROM students WHERE id=?", (id,))
 
         conn.commit()
         conn.close()
 
-        return jsonify({
-            "message": "Student Deleted Successfully!"
-        }), 200
+        return jsonify({"message": "Student Deleted Successfully!"}), 200

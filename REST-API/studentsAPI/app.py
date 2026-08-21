@@ -1,6 +1,6 @@
 from flask import Flask
 from routes import register_routes
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import JWTManager, create_access_token
 
 app = Flask(__name__)
 
