@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from database import get_connection
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 
 
 def register_routes(app):
@@ -23,6 +23,7 @@ def register_routes(app):
         return jsonify({"message": "Invalid Username or Password"}), 401
 
     @app.route("/students", methods=["GET"])
+    @jwt_required()
     def get_students():
 
         conn = get_connection()
