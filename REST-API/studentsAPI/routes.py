@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from database import get_connection
 from flask_jwt_extended import create_access_token, jwt_required
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 def register_routes(app):
@@ -11,12 +12,10 @@ def register_routes(app):
         data = request.get_json()
 
         username = data.get("username")
-        password = data.get("password")
+        password = generate_password_hash(data.get("password"))
 
         if not username or not password:
-            return jsonify({
-                "message": "Username and Password are required"
-            }), 400
+            return jsonify({"message": "Username and Password are required"}), 400
 
         conn = get_connection()
         cursor = conn.cursor()
@@ -24,19 +23,15 @@ def register_routes(app):
         try:
             cursor.execute(
                 "INSERT INTO users(username, password) VALUES(?, ?)",
-                (username, password)
+                (username, password),
             )
 
             conn.commit()
 
-            return jsonify({
-                "message": "User Registered Successfully"
-            }), 201
+            return jsonify({"message": "User Registered Successfully"}), 201
 
         except Exception:
-            return jsonify({
-                "message": "Username already exists"
-            }), 400
+            return jsonify({"message": "Username already exists"}), 400
 
         finally:
             conn.close()
@@ -46,41 +41,30 @@ def register_routes(app):
 
         data = request.get_json()
 
-        username = data.get("username") 
+        username = data.get("username")
         password = data.get("password")
 
         if not username or not password:
-            return jsonify({
-                "message": "Username and Password is required"
-            }), 400
+            return jsonify({"message": "Username and Password is required"}), 400
 
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute(
-            "SELECT * FROM users WHERE username=?",
-            (username,))
+        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
 
         user = cursor.fetchone()
 
         conn.close()
 
         if user is None:
-            return jsonify({
-                "message": "User not found!"
-            }), 404
+            return jsonify({"message": "User not found!"}), 404
 
-        if user[2] != password:
-            return jsonify({
-                "message": "Incorrect password!"
-            }), 401 
+        if not check_password_hash(user[2], password):
+            return jsonify({"message": "Incorrect password!"}), 401
 
         token = create_access_token(identity=username)
 
-        return jsonify({
-            "message": "Login SuccessfullY!",
-            "token": token
-        }), 200    
+        return jsonify({"message": "Login SuccessfullY!", "token": token}), 200
 
     @app.route("/students", methods=["GET"])
     @jwt_required()
