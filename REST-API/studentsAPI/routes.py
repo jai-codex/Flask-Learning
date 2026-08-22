@@ -22,8 +22,8 @@ def register_routes(app):
 
         try:
             cursor.execute(
-                "INSERT INTO users(username, password) VALUES(?, ?)",
-                (username, password),
+                "INSERT INTO users(username, password, role) VALUES(?, ?, ?)",
+                (username, password, "user"),
             )
 
             conn.commit()
@@ -64,7 +64,7 @@ def register_routes(app):
 
         token = create_access_token(identity=username)
 
-        return jsonify({"message": "Login SuccessfullY!", "token": token}), 200
+        return jsonify({"message": "Login Successfully!", "token": token}), 200
 
     @app.route("/students", methods=["GET"])
     @jwt_required()
