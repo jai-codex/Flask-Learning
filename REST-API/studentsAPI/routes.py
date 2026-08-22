@@ -45,18 +45,42 @@ def register_routes(app):
     def login():
 
         data = request.get_json()
-        username = data.get("username")
+
+        username = data.get("username") 
         password = data.get("password")
 
-        if username == "admin" and password == "1234":
+        if not username or not password:
+            return jsonify({
+                "message": "Username and Password is required"
+            }), 400
 
-            token = create_access_token(identity=username)
+        conn = get_connection()
+        cursor = conn.cursor()
 
-            return (
-                jsonify({"message": "Student Login Successfully!", "token": token}),
-                200,
-            )
-        return jsonify({"message": "Invalid Username or Password"}), 401
+        cursor.execute(
+            "SELECT * FROM users WHERE username=?",
+            (username,))
+
+        user = cursor.fetchone()
+
+        conn.close()
+
+        if user is None:
+            return jsonify({
+                "message": "User not found!"
+            }), 404
+
+        if user[2] != password:
+            return jsonify({
+                "message": "Incorrect password!"
+            }), 401 
+
+        token = create_access_token(identity=username)
+
+        return jsonify({
+            "message": "Login SuccessfullY!",
+            "token": token
+        }), 200    
 
     @app.route("/students", methods=["GET"])
     @jwt_required()
